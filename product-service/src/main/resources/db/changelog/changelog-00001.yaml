@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Artur Frimu
+      changes:
+        - sql:
+            sql: >
+              CREATE TABLE category(
+                category_id SERIAL NOT NULL,
+                name VARCHAR(128) NOT NULL,
+                CONSTRAINT pk_category_id PRIMARY KEY (category_id),
+                CONSTRAINT uq_category_name UNIQUE (name)
+              );

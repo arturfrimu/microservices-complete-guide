@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Artur Frimu
+      changes:
+        - sql:
+            sql: >
+              CREATE TABLE product(
+                  product_id      SERIAL,
+                  name            VARCHAR(255),
+                  description     VARCHAR(255),
+                  price           NUMERIC(10, 2),
+                  category_id     BIGINT,
+                  CONSTRAINT pk_product_id PRIMARY KEY (product_id),
+                  CONSTRAINT uq_product_name UNIQUE (name),
+                  FOREIGN KEY (category_id) REFERENCES category (category_id)
+              );
