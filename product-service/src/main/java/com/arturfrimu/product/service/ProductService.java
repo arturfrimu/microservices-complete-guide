@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -23,7 +22,6 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final EntityManager entityManager;
 
     public List<ProductInfoResponse> list() {
         return productRepository.findAll().stream().map(ProductInfoResponse::valueOf).collect(toList());
