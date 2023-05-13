@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: Artur Frimu
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO product (name, description, price, category_id) VALUES
+                ('iPhone 13 Pro Max', 'Latest iPhone model with A15 Bionic chip', 1099.00, 1),
+                ('Samsung Galaxy S22 Ultra', 'High-end Samsung smartphone with Exynos 2200', 1199.00, 1),
+                ('MacBook Pro', 'Apple laptop with M1 Max chip', 2499.00, 2),
+                ('Dell XPS 15', 'Dell laptop with Intel Core i7', 1599.00, 2),
+                ('Sony WH-1000XM4', 'Premium Sony noise-cancelling headphones', 349.00, 3);

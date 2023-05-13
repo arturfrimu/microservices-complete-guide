@@ -8,3 +8,6 @@ databaseChangeLog:
   - include:
       file: changelog-00003.yaml
       relativeToChangelogFile: true
+  - include:
+      file: changelog-00004.yaml
+      relativeToChangelogFile: true
