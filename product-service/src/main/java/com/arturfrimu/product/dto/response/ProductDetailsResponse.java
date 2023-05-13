@@ -5,16 +5,18 @@ import com.arturfrimu.product.model.Product;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 @EqualsAndHashCode
 public final class ProductDetailsResponse {
     private final Long productId;
     private final String name;
     private final String description;
-    private final Double price;
+    private final BigDecimal price;
     private final Category category;
 
-    public ProductDetailsResponse(Long productId, String name, String description, Double price, Category category) {
+    public ProductDetailsResponse(Long productId, String name, String description, BigDecimal price, Category category) {
         this.productId = productId;
         this.name = name;
         this.description = description;

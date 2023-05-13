@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -26,13 +27,13 @@ public class Product {
     @NotNull
     private String description;
     @NotNull
-    private Double price;
+    private BigDecimal price;
 
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public Product(String name, String description, Double price, Category category) {
+    public Product(String name, String description, BigDecimal price, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;

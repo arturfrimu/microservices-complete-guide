@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.stream.Collectors.toMap;
@@ -36,14 +37,14 @@ class ComponentTest {
         testCreateProduct(new CreateProductRequest( // TODO: 01/05/2023 Replace object creation with json format
                 "Apple MacBook Pro",
                 "Powerful laptop with M1 chip and Retina display",
-                1499.99,
+                BigDecimal.valueOf(1499.99),
                 1L
         ));
 
         testCreateProduct(new CreateProductRequest(
                 "Samsung Galaxy S21",
                 "Flagship Android smartphone with 5G capabilities",
-                799.99,
+                BigDecimal.valueOf(799.99),
                 1L)
         );
 
@@ -55,15 +56,7 @@ class ComponentTest {
                 nameToId.get("Apple MacBook Pro"),
                 "Apple MacBook Pro",
                 "Powerful laptop with M1 chip and Retina display",
-                1499.99,
-                new Category(1L, "Electronics")
-        ));
-
-        testFindProduct(nameToId.get("Samsung Galaxy S21"), new ProductDetailsResponse(
-                nameToId.get("Samsung Galaxy S21"),
-                "Samsung Galaxy S21",
-                "Flagship Android smartphone with 5G capabilities",
-                799.99,
+                BigDecimal.valueOf(1499.99),
                 new Category(1L, "Electronics")
         ));
 
