@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Artur Frimu
+      changes:
+        - sql:
+            sql: >
+              CREATE TABLE customer(
+                  customer_id     SERIAL       NOT NULL,
+                  name            VARCHAR(255) NOT NULL,
+                  email           VARCHAR(255) NOT NULL,
+                  address         VARCHAR(255) NOT NULL,
+                  CONSTRAINT pk_customer_id PRIMARY KEY (customer_id),
+                  CONSTRAINT uq_customer_name  UNIQUE (name),
+                  CONSTRAINT uq_customer_email UNIQUE (email)
+              );

@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Artur Frimu
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO customer (name, email, address) VALUES
+                ('John Doe', 'johndoe@example.com', '123 Main St, Springfield, IL'),
+                ('Jane Smith', 'janesmith@example.com', '456 Elm St, Shelbyville, IL'),
+                ('Robert Johnson', 'robertjohnson@example.com', '789 Pine St, Capital City, IL'),
+                ('Mary Davis', 'marydavis@example.com', '321 Oak St, Ogdenville, IL'),
+                ('James Wilson', 'jameswilson@example.com', '654 Maple St, North Haverbrook, IL');
