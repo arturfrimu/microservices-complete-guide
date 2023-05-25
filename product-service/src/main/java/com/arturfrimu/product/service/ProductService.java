@@ -34,13 +34,13 @@ public class ProductService {
 
     @Transactional
     public ProductInfoResponse create(CreateProductCommand command) {
-        var category = categoryRepository.findById(command.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException(format("Category not found with id: %s", command.getCategoryId())));
+        var category = categoryRepository.findById(command.categoryId())
+                .orElseThrow(() -> new ResourceNotFoundException(format("Category not found with id: %s", command.categoryId())));
 
         var newProduct = new Product(
-                command.getName(),
-                command.getDescription(),
-                command.getPrice(),
+                command.name(),
+                command.description(),
+                command.price(),
                 category
         );
 

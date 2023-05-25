@@ -1,9 +1,12 @@
 package com.arturfrimu.customer.component;
 
+import com.arturfrimu.customer.component.random.requests.RandomCreateCustomerRequest;
 import com.arturfrimu.customer.dto.request.CreateCustomerRequest;
 import com.arturfrimu.customer.dto.response.CustomerDetailsResponse;
 import com.arturfrimu.customer.dto.response.CustomerInfoResponse;
 import com.arturfrimu.customer.repository.CustomerRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,50 +24,52 @@ import static org.springframework.http.RequestEntity.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-class ComponentTest {
+class CustomerComponentTest {
 
     @Autowired
     BaseRestTemplate restTemplate;
     @Autowired
-    CustomerRepository customerRepository; // TODO: 01/05/2023 remove me
+    CustomerRepository customerRepository;
+
+    private CreateCustomerRequest johnSnow;
+    private CreateCustomerRequest alanKey;
+
+    @BeforeEach
+    public void setup() {
+        johnSnow = RandomCreateCustomerRequest.builder()
+                .name("John Snow")
+                .build()
+                .get();
+
+        alanKey = RandomCreateCustomerRequest.builder()
+                .name("Alan key")
+                .build()
+                .get();
+    }
+
+    @AfterEach
+    public void clean() {
+        customerRepository.deleteAll(); // TODO: 01/05/2023 Use test containers instead
+    }
 
     @Test
     public void testLifecycle() {
-        customerRepository.deleteAll(); // TODO: 01/05/2023 Use test containers instead
-
-        testCreateCustomer(new CreateCustomerRequest( // TODO: 01/05/2023 Replace object creation with json format
-                "John Snow",
-                "johnsnow@gmail.com",
-                "Oakwood Lane 33"
-        ));
-
-        testCreateCustomer(new CreateCustomerRequest(
-                        "Alan key",
-                        "alankey@gmail.com",
-                        "Maple Terrace 79"
-                )
-        );
+        testCreateCustomer(johnSnow);
+        testCreateCustomer(alanKey);
 
         var customers = testListCustomers();
 
-        var nameToId = customers.stream().collect(toMap(CustomerInfoResponse::getName, CustomerInfoResponse::getCustomerId));
+        var nameToId = customers.stream().collect(toMap(CustomerInfoResponse::name, CustomerInfoResponse::customerId));
 
-        testFindCustomer(nameToId.get("John Snow"), new CustomerDetailsResponse(
-                nameToId.get("John Snow"),
-                "John Snow",
-                "johnsnow@gmail.com",
-                "Oakwood Lane 33"
+        testFindCustomer(nameToId.get(johnSnow.name()), new CustomerDetailsResponse(
+                nameToId.get(johnSnow.name()),
+                johnSnow.name(),
+                johnSnow.email(),
+                johnSnow.address()
         ));
 
-        testFindCustomer(nameToId.get("Alan key"), new CustomerDetailsResponse(
-                nameToId.get("Alan key"),
-                "Alan key",
-                "alankey@gmail.com",
-                "Maple Terrace 79"
-        ));
-
-        testDeleteCustomer(nameToId.get("Alan key"));
-        testDeleteCustomer(nameToId.get("John Snow"));
+        testDeleteCustomer(nameToId.get(alanKey.name()));
+        testDeleteCustomer(nameToId.get(johnSnow.name()));
     }
 
     private void testCreateCustomer(CreateCustomerRequest body) {
@@ -75,8 +80,8 @@ class ComponentTest {
         var createdCustomer = response.getBody();
 
         assertThat(createdCustomer).isNotNull();
-        assertThat(createdCustomer.getCustomerId()).isNotNull();
-        assertThat(createdCustomer.getName()).isEqualTo(body.getName());
+        assertThat(createdCustomer.customerId()).isNotNull();
+        assertThat(createdCustomer.name()).isEqualTo(body.name());
     }
 
     private List<CustomerInfoResponse> testListCustomers() {
@@ -88,20 +93,20 @@ class ComponentTest {
 
         assertThat(customers).isNotNull();
         assertThat(customers)
-                .extracting(CustomerInfoResponse::getName)
-                .containsExactlyInAnyOrder("John Snow", "Alan key");
+                .extracting(CustomerInfoResponse::name)
+                .containsExactlyInAnyOrder(johnSnow.name(), alanKey.name());
 
         return customers;
     }
 
     private void testFindCustomer(Long customerId, CustomerDetailsResponse expected) {
-        var response = restTemplate
-                .exchange(get(PRODUCT_BASE_URL + "/" + customerId).build(), PRODUCT_DETAILS);
+        var response = restTemplate.exchange(get(PRODUCT_BASE_URL + "/" + customerId).build(), PRODUCT_DETAILS);
 
         assertThat(response.getStatusCode()).isEqualTo(OK);
 
         var customer = response.getBody();
 
+        assertThat(customer).isNotNull();
         assertThat(customer).isEqualTo(expected);
     }
 

@@ -11,7 +11,6 @@ import com.arturfrimu.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -37,9 +36,9 @@ public class CustomerService {
     @Transactional
     public CustomerInfoResponse create(CreateCustomerCommand command) {
         var newCustomer = new Customer(
-                command.getName(),
-                command.getEmail(),
-                command.getAddress()
+                command.name(),
+                command.email(),
+                command.address()
         );
 
         return CustomerInfoResponse.valueOf(customerRepository.save(newCustomer));
@@ -59,8 +58,8 @@ public class CustomerService {
         var customerProducts = productClient.getCustomerProducts();
 
         return new CustomerProductsResponse(
-                customer.getCustomerId(),
-                customer.getName(),
+                customer.customerId(),
+                customer.name(),
                 customerProducts
         );
     }

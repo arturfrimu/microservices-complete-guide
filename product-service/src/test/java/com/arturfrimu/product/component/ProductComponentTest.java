@@ -1,10 +1,13 @@
 package com.arturfrimu.product.component;
 
+import com.arturfrimu.product.component.random.request.RandomCreateProductRequest;
 import com.arturfrimu.product.dto.request.CreateProductRequest;
 import com.arturfrimu.product.dto.response.ProductDetailsResponse;
 import com.arturfrimu.product.dto.response.ProductInfoResponse;
 import com.arturfrimu.product.model.Category;
 import com.arturfrimu.product.repository.ProductRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.stream.Collectors.toMap;
@@ -23,45 +25,54 @@ import static org.springframework.http.RequestEntity.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-class ComponentTest {
+class ProductComponentTest {
 
     @Autowired
     BaseRestTemplate restTemplate;
     @Autowired
-    ProductRepository productRepository; // TODO: 01/05/2023 remove me
+    ProductRepository productRepository;
+
+    private CreateProductRequest appleWatch;
+    private CreateProductRequest macbookPro;
+
+    @BeforeEach
+    public void setup() {
+        appleWatch = RandomCreateProductRequest.builder()
+                .name("Apple Watch")
+                .categoryId(1L)
+                .build()
+                .get();
+
+        macbookPro = RandomCreateProductRequest.builder()
+                .name("Macbook Pro")
+                .categoryId(1L)
+                .build()
+                .get();
+    }
+
+    @AfterEach
+    public void clean() {
+        productRepository.deleteAll();
+    }
 
     @Test
     public void testLifecycle() {
-        productRepository.deleteAll(); // TODO: 01/05/2023 Use test containers instead
-
-        testCreateProduct(new CreateProductRequest( // TODO: 01/05/2023 Replace object creation with json format
-                "Apple MacBook Pro",
-                "Powerful laptop with M1 chip and Retina display",
-                BigDecimal.valueOf(1499.99),
-                1L
-        ));
-
-        testCreateProduct(new CreateProductRequest(
-                "Samsung Galaxy S21",
-                "Flagship Android smartphone with 5G capabilities",
-                BigDecimal.valueOf(799.99),
-                1L)
-        );
+        testCreateProduct(appleWatch);
+        testCreateProduct(macbookPro);
 
         var products = testListProducts();
 
-        var nameToId = products.stream().collect(toMap(ProductInfoResponse::getName, ProductInfoResponse::getProductId));
+        var nameToId = products.stream().collect(toMap(ProductInfoResponse::name, ProductInfoResponse::productId));
 
-        testFindProduct(nameToId.get("Apple MacBook Pro"), new ProductDetailsResponse(
-                nameToId.get("Apple MacBook Pro"),
-                "Apple MacBook Pro",
-                "Powerful laptop with M1 chip and Retina display",
-                BigDecimal.valueOf(1499.99),
-                new Category(1L, "Electronics")
+        testFindProduct(nameToId.get(macbookPro.name()), new ProductDetailsResponse(
+                nameToId.get(macbookPro.name()),
+                macbookPro.name(),
+                macbookPro.description(),
+                macbookPro.price(),
+                new Category(macbookPro.categoryId(), "Electronics")
         ));
 
-        testDeleteProduct(nameToId.get("Samsung Galaxy S21"));
-        testDeleteProduct(nameToId.get("Apple MacBook Pro"));
+        testDeleteProduct(nameToId.get(macbookPro.name()));
     }
 
     private void testCreateProduct(CreateProductRequest body) {
@@ -72,8 +83,8 @@ class ComponentTest {
         var createdProduct = response.getBody();
 
         assertThat(createdProduct).isNotNull();
-        assertThat(createdProduct.getProductId()).isNotNull();
-        assertThat(createdProduct.getName()).isEqualTo(body.getName());
+        assertThat(createdProduct.productId()).isNotNull();
+        assertThat(createdProduct.name()).isEqualTo(body.name());
     }
 
     private List<ProductInfoResponse> testListProducts() {
@@ -85,19 +96,20 @@ class ComponentTest {
 
         assertThat(products).isNotNull();
         assertThat(products)
-                .extracting(ProductInfoResponse::getName)
-                .containsExactlyInAnyOrder("Apple MacBook Pro", "Samsung Galaxy S21");
+                .extracting(ProductInfoResponse::name)
+                .containsExactlyInAnyOrder(appleWatch.name(), macbookPro.name());
 
         return products;
     }
 
     private void testFindProduct(Long productId, ProductDetailsResponse expected) {
-        var response = restTemplate
-                .exchange(get(PRODUCT_BASE_URL + "/" + productId).build(), PRODUCT_DETAILS);
+        var response = restTemplate.exchange(get(PRODUCT_BASE_URL + "/" + productId).build(), PRODUCT_DETAILS);
 
         assertThat(response.getStatusCode()).isEqualTo(OK);
 
         var product = response.getBody();
+
+        assertThat(product).isNotNull();
 
         assertThat(product).isEqualTo(expected);
     }
