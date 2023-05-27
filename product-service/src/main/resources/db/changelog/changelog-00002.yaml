@@ -7,11 +7,11 @@ databaseChangeLog:
             sql: >
               CREATE TABLE product(
                   product_id      SERIAL,
-                  name            VARCHAR(255)   NOT NULL,
+                  name            VARCHAR(255)      NOT NULL,
                   description     VARCHAR(255),
-                  price           NUMERIC(10, 2) NOT NULL,
-                  category_id     BIGINT,
-                  CONSTRAINT pk_product_id PRIMARY KEY (product_id),
-                  CONSTRAINT uq_product_name UNIQUE (name),
-                  FOREIGN KEY (category_id) REFERENCES category (category_id)
+                  price           NUMERIC(10, 2)    NOT NULL,
+                  category_id     SERIAL,
+                  CONSTRAINT      pk_product_id     PRIMARY KEY (product_id),
+                  CONSTRAINT      uq_product_name   UNIQUE (name),
+                  FOREIGN KEY     (category_id)     REFERENCES category (category_id)
               );

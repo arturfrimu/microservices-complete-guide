@@ -1,9 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 3
+      id: 10002
       author: Artur Frimu
       changes:
         - sql:
             sql: >
-              ALTER TABLE product 
-              ADD COLUMN customer_id SERIAL NOT NULL;
+              UPDATE product
+              SET customer_id = 1;

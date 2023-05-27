@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public final class RestControllerAdvice {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public final ResponseEntity<ExceptionDetails> handleResourceNotFoundException(
+    public ResponseEntity<ExceptionDetails> handleResourceNotFoundException(
             ResourceNotFoundException exception,
             WebRequest request
     ) {

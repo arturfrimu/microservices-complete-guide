@@ -6,8 +6,14 @@ databaseChangeLog:
       file: changelog-00002.yaml
       relativeToChangelogFile: true
   - include:
+      file: changelog-x10000-insert-categories.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changelog-x10001-insert-products.yaml
+      relativeToChangelogFile: true
+  - include:
       file: changelog-00003.yaml
       relativeToChangelogFile: true
   - include:
-      file: changelog-00004.yaml
+      file: changelog-x10002-set-customerId.yaml
       relativeToChangelogFile: true

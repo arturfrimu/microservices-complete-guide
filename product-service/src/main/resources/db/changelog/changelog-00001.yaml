@@ -6,8 +6,8 @@ databaseChangeLog:
         - sql:
             sql: >
               CREATE TABLE category(
-                category_id   SERIAL        NOT NULL,
-                name          VARCHAR(255)  NOT NULL,
-                CONSTRAINT pk_category_id PRIMARY KEY (category_id),
-                CONSTRAINT uq_category_name UNIQUE (name)
+                category_id   SERIAL             NOT NULL,
+                name          VARCHAR(255)       NOT NULL,
+                CONSTRAINT    pk_category_id     PRIMARY KEY (category_id),
+                CONSTRAINT    uq_category_name   UNIQUE (name)
               );

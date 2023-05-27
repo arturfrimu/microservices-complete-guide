@@ -47,8 +47,8 @@ public final class CustomerController {
     }
 
     @GetMapping("/{customerId}/products")
-    public ResponseEntity<CustomerProductsResponse> getCustomerWithProducts(@PathVariable Long customerId) {
-        var customerProducts = customerService.getCustomerProducts(customerId);
+    public ResponseEntity<CustomerProductsResponse> listCustomerProducts(@PathVariable Long customerId) {
+        var customerProducts = customerService.listCustomerProducts(customerId);
         return ok(customerProducts);
     }
 }

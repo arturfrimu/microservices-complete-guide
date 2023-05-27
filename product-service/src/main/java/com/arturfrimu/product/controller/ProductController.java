@@ -1,6 +1,7 @@
 package com.arturfrimu.product.controller;
 
 import com.arturfrimu.product.dto.command.CreateProductCommand;
+import com.arturfrimu.product.dto.filter.SearchProductCriteria;
 import com.arturfrimu.product.dto.response.ProductInfoResponse;
 import com.arturfrimu.product.dto.request.CreateProductRequest;
 import com.arturfrimu.product.dto.response.ProductDetailsResponse;
@@ -22,8 +23,11 @@ public final class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductInfoResponse>> list() {
-        return ok(productService.list());
+    public ResponseEntity<List<ProductInfoResponse>> list(
+            @RequestParam(value = "customerId", required = false) Long customerId
+    ) {
+        var productFilter = SearchProductCriteria.builder().customerId(customerId).build();
+        return ok(productService.list(productFilter));
     }
 
     @GetMapping("/{id}")

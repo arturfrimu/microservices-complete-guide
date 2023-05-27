@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10000
+      author: Artur Frimu
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO category (name) VALUES
+                ('Electronics'),
+                ('Clothing'),
+                ('Home and Kitchen'),
+                ('Beauty and Personal Care'),
+                ('Sports and Outdoors'),
+                ('Books'),
+                ('Toys and Games'),
+                ('Food and Beverages'),
+                ('Health and Wellness'),
+                ('Office Supplies');

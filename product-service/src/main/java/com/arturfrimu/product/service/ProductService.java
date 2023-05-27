@@ -1,6 +1,7 @@
 package com.arturfrimu.product.service;
 
 import com.arturfrimu.product.dto.command.CreateProductCommand;
+import com.arturfrimu.product.dto.filter.SearchProductCriteria;
 import com.arturfrimu.product.dto.response.ProductDetailsResponse;
 import com.arturfrimu.product.dto.response.ProductInfoResponse;
 import com.arturfrimu.product.exception.ResourceNotFoundException;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +22,10 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final CriteriaProductRepository criteriaProductRepository;
 
-    public List<ProductInfoResponse> list() {
-        return productRepository.findAll().stream().map(ProductInfoResponse::valueOf).collect(toList());
+    public List<ProductInfoResponse> list(SearchProductCriteria productFilter) {
+        return criteriaProductRepository.list(productFilter);
     }
 
     public ProductDetailsResponse find(Long id) {

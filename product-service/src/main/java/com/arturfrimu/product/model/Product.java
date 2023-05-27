@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +16,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "product")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
+@FieldNameConstants
 public class Product {
 
     @Id
@@ -28,6 +30,8 @@ public class Product {
     private String description;
     @NotNull
     private BigDecimal price;
+    @NotNull
+    private Long customerId;
 
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "category_id", nullable = false)

@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class CustomerService {
     private final ProductClient productClient;
 
     public List<CustomerInfoResponse> list() {
-        return customerRepository.findAll().stream().map(CustomerInfoResponse::valueOf).collect(toList());
+        return customerRepository.findAll().stream().map(CustomerInfoResponse::valueOf).toList();
     }
 
     public CustomerDetailsResponse find(Long id) {
@@ -51,11 +50,11 @@ public class CustomerService {
         customerRepository.delete(existingCustomer);
     }
 
-    public CustomerProductsResponse getCustomerProducts(Long customerId) {
+    public CustomerProductsResponse listCustomerProducts(Long customerId) {
         var customer = customerRepository.findById(customerId).map(CustomerDetailsResponse::valueOf)
                 .orElseThrow(() -> new ResourceNotFoundException(format("Customer not found with id: %s", customerId)));
 
-        var customerProducts = productClient.getCustomerProducts();
+        var customerProducts = productClient.getCustomerProducts(customerId);
 
         return new CustomerProductsResponse(
                 customer.customerId(),
